@@ -11,19 +11,19 @@ object Pulls extends IOApp.Simple {
     val outputPull: Pull[Pure, Int, Unit] = Pull.output1(1)
     IO.println(outputPull.stream.toList)
 
-    val outputChunk = Pull.output(Chunk(1, 2, 3))
+    val outputChunk: Pull[Pure, Int, Unit] = Pull.output(Chunk(1, 2, 3))
     IO.println(outputChunk.stream.toList)
 
     val donePull: Pull[Pure, Nothing, Unit] = Pull.done
 
     val purePull: Pull[Pure, Nothing, Int] = Pull.pure(5)
 
-    val combined =
+    val combined: Pull[Pure, Int, Unit] =
       for {
         _ <- Pull.output1(1)
         _ <- Pull.output(Chunk(2, 3, 4))
       } yield ()
-    IO.println(combined.stream.toList)
+    IO.println(combined.stream.compile.toList)
     IO.println(combined.stream.chunks.toList)
 
     val toPull: ToPull[Pure, Int] = s.pull
